@@ -1,149 +1,96 @@
-CREATE TABLE Fabryka (
-    ID_ZamowieniaZfab NUMBER NOT NULL,
-    ID_Towaru         NUMBER NOT NULL,
-    Cena              NUMBER(5, 2) NOT NULL,
-    Uwagi             VARCHAR2(255)
+CREATE TABLE Adresy (
+    ID_Adresu         NUMBER(7) NOT NULL CONSTRAINT Adresy_pk PRIMARY KEY,
+    miasto            VARCHAR2(255) NOT NULL,
+    ulica             VARCHAR2(255) NOT NULL,
+    nr_budynku        VARCHAR2(10) NOT NULL,
+	nr_mieszkania     VARCHAR2(10)
 );
 
-ALTER TABLE Fabryka ADD CONSTRAINT fabryka_pk PRIMARY KEY ( ID_ZamowieniaZfab );
-
-CREATE TABLE Fabryka_katalog (
-    ID_Towaru         NUMBER NOT NULL,
-    ID_ZamowienieZfab NUMBER NOT NULL,
-    Ilosc             NUMBER NOT NULL
+CREATE TABLE Osoby (
+    ID_Osoby          NUMBER(7) NOT NULL CONSTRAINT Osoby_pk PRIMARY KEY,
+    ID_Adresu         NUMBER(7) NOT NULL,
+    Imie              VARCHAR2(30) NOT NULL,
+    Nazwisko          VARCHAR2(45) NOT NULL,
+	Data_ur           DATE NOT NULL,
+	PESEL             VARCHAR2(11) NOT NULL,
+	nr_telefonu       VARCHAR2(20) NOT NULL,
+	mail              VARCHAR2(75) NOT NULL,
+	plec              CHAR(1) NOT NULL,
+	UNIQUE(PESEL),
+	UNIQUE(nr_telefonu)
 );
 
-ALTER TABLE Fabryka_katalog ADD CONSTRAINT fabryka_katalog_pk PRIMARY KEY ( ID_Towaru );
+ALTER TABLE Osoby ADD CONSTRAINT Osoby_Adresy_fk FOREIGN KEY ( ID_Adresu )
+    REFERENCES Adresy ( ID_Adresu )
+NOT DEFERRABLE;
 
-CREATE TABLE Gwarancja (
-    ID_gwarancji  NUMBER NOT NULL,
-    Nazwa         VARCHAR2(255) NOT NULL,
-    Ubezpieczenie VARCHAR2(255) NOT NULL
+CREATE TABLE Klienci (
+    ID_Klienta        NUMBER(7) NOT NULL CONSTRAINT Klienci_pk PRIMARY KEY,
+    ID_Osoby          NUMBER(7) NOT NULL,
+    data_rejestracji  DATE NOT NULL,
+    uwagi             VARCHAR2(255),
+	NIP               NUMBER(10)
 );
 
-ALTER TABLE Gwarancja ADD CONSTRAINT Gwarancja_pk PRIMARY KEY ( ID_gwarancji );
+ALTER TABLE Klienci ADD CONSTRAINT Klient_Osoby_fk FOREIGN KEY ( ID_Osoby )
+    REFERENCES Osoby ( ID_Osoby )
+NOT DEFERRABLE;
 
-CREATE TABLE Informacje_dod (
-    ID_Inf           NUMBER NOT NULL,
-    Szczepiony       CHAR(1) NOT NULL,
-    Stan_zdrowia     VARCHAR2(255) NOT NULL,
-    Wymagania        VARCHAR2(255),
-    Data_badania_okr DATE NOT NULL,
-    Plec             VARCHAR2(255)NOT NULL,
-    Dzieci           VARCHAR2(255),
-    Uwagi            VARCHAR2(255)
+CREATE TABLE Stanowiska (
+    ID_Stanowiska     NUMBER(7) NOT NULL CONSTRAINT Stanowiska_pk PRIMARY KEY,
+    nazwa             VARCHAR2(55) NOT NULL,
+    obowiazki         VARCHAR2(255) NOT NULL
 );
-
-ALTER TABLE Informacje_dod ADD CONSTRAINT Informacje_dod_pk PRIMARY KEY ( ID_Inf );
-
-CREATE TABLE Kasa (
-    ID_Zamowienia  NUMBER NOT NULL,
-    ID_Towaru      NUMBER,
-    ID_Uslugi      NUMBER,
-    Znizka         VARCHAR2(255),
-    Platnosc       VARCHAR2(255),
-    Cena_calkowita NUMBER(5, 2),
-    Uwagi          VARCHAR2(255),
-    Kasjer         NUMBER,
-    Data           DATE
-);
-
-ALTER TABLE Kasa ADD CONSTRAINT kasa_pk PRIMARY KEY ( ID_Zamowienia );
-
-CREATE TABLE Kasa_towar (
-    ID_Zamowienia NUMBER NOT NULL,
-    ID_Towaru     NUMBER
-);
-
-ALTER TABLE Kasa_towar ADD CONSTRAINT Kasa_towar_pk PRIMARY KEY ( ID_Zamowienia );
-
-CREATE TABLE Kasa_uslugi (
-    ID_Zamowienia NUMBER NOT NULL,
-    ID_Uslugi     NUMBER
-);
-
-ALTER TABLE Kasa_uslugi ADD CONSTRAINT Kasa_uslugi_pk PRIMARY KEY ( ID_Zamowienia );
-
-CREATE TABLE Katalog (
-    ID_Towaru  NUMBER NOT NULL,
-    Nazwa      VARCHAR2(255) NOT NULL,
-    Cena       NUMBER(5, 2) NOT NULL,
-    Informacja VARCHAR2(255)
-);
-
-ALTER TABLE Katalog ADD CONSTRAINT Katalog_pk PRIMARY KEY ( ID_Towaru );
-
-CREATE TABLE Komplety (
-    ID_Komplet    NUMBER NOT NULL,
-    Cena_kompletu NUMBER(5, 2) NOT NULL
-);
-
-ALTER TABLE Komplety ADD CONSTRAINT Komplety_pk PRIMARY KEY ( ID_Komplet );
-
-CREATE TABLE Kontakt (
-    ID_Kontakt    NUMBER NOT NULL,
-    Telefon       VARCHAR2(255) NOT NULL,
-    Miasto        VARCHAR2(255) NOT NULL,
-    Ulica         VARCHAR2(255) NOT NULL,
-    Nr_budynku    NUMBER,
-    Nr_mieszkania NUMBER,
-    Mail          VARCHAR2(255)
-);
-
-ALTER TABLE Kontakt ADD CONSTRAINT Kontakt_pk PRIMARY KEY ( ID_Kontakt );
-
-CREATE TABLE Podtypy (
-    ID_Podtypu NUMBER NOT NULL,
-    Nazwa      VARCHAR2(255)
-);
-
-ALTER TABLE Podtypy ADD CONSTRAINT Podtypy_pk PRIMARY KEY ( ID_Podtypu );
-
-CREATE TABLE Prac_uslugi (
-    ID_Uslugi     NUMBER NOT NULL,
-    ID_pracownika NUMBER NOT NULL
-);
-
-ALTER TABLE Prac_uslugi ADD CONSTRAINT Prac_uslugi_pk PRIMARY KEY ( ID_Uslugi );
 
 CREATE TABLE Pracownicy (
-    ID_Pracownika NUMBER NOT NULL,
-    Imie          VARCHAR2(255),
-    Nazwisko      VARCHAR2(255),
-    Stanowisko    VARCHAR2(255),
-    ID_Kontakt    NUMBER,
-    ID_Inf        NUMBER,
-    Data_ur       DATE
+    ID_Pracownika            NUMBER(7) NOT NULL CONSTRAINT Pracownicy_pk PRIMARY KEY,
+    ID_Osoby                 NUMBER(7) NOT NULL,
+    ID_Przelozonego          NUMBER(7) NOT NULL,
+    data_zatrudnienia        DATE NOT NULL,
+	pensja                   NUMBER(5) NOT NULL,
+	stan_zdrowia             VARCHAR2(255),
+	data_badania_okr         DATE NOT NULL,
+	szczepiony               CHAR(1) NOT NULL,
+	uwagi                    VARCHAR2(255)
 );
 
-ALTER TABLE Pracownicy ADD CONSTRAINT Pracownicy_pk PRIMARY KEY ( ID_Pracownika );
+ALTER TABLE Pracownicy ADD CONSTRAINT Pracownicy_Osoby_fk FOREIGN KEY ( ID_Osoby )
+    REFERENCES Osoby ( ID_Osoby )
+NOT DEFERRABLE;
+ALTER TABLE Pracownicy ADD CONSTRAINT Pracownicy_Prac_przelozeni_fk FOREIGN KEY ( ID_Przelozonego )
+    REFERENCES Pracownicy ( ID_Pracownika )
+NOT DEFERRABLE;
 
-CREATE TABLE Towar (
-    ID_Towaru  NUMBER NOT NULL,
-    Nazwa      VARCHAR2(255),
-    Material   VARCHAR2(255),
-    Cena       NUMBER(5, 2),
-    Gwarancja  DATE,
-    Uwagi      VARCHAR2(255),
-    ID_Komplet NUMBER,
-    Dostepnosc CHAR(1)
+CREATE TABLE Stanowiska_pracownikow (
+    ID_Stanowiska_prac       NUMBER(7) NOT NULL CONSTRAINT Stanowiska_pracownikow_pk PRIMARY KEY,
+    ID_Stanowiska            NUMBER(7) NOT NULL,
+    ID_Pracownika            NUMBER(7) NOT NULL
 );
 
-ALTER TABLE Towar ADD CONSTRAINT Towar_pk PRIMARY KEY ( ID_Towaru );
+ALTER TABLE Stanowiska_pracownikow ADD CONSTRAINT Stanow_prac_Stanowiska_fk FOREIGN KEY ( ID_Stanowiska )
+    REFERENCES Stanowiska ( ID_Stanowiska )
+NOT DEFERRABLE;
+ALTER TABLE Stanowiska_pracownikow ADD CONSTRAINT Stanow_prac_Pracownicy_fk FOREIGN KEY ( ID_Pracownika )
+    REFERENCES Pracownicy ( ID_Pracownika )
+NOT DEFERRABLE;
 
-CREATE TABLE Typy (
-    ID_Typu    NUMBER NOT NULL,
-    Nazwa      VARCHAR2(255),
-    ID_podtypu NUMBER
+CREATE TABLE Kategorie_prouktow (
+    ID_Kategorii_prod        NUMBER(7) NOT NULL CONSTRAINT Kategorie_prouktow_pk PRIMARY KEY,
+    nazwa                    VARCHAR2(55) NOT NULL UNIQUE,
+    opis                     VARCHAR2(255) NOT NULL,
+	gabaryt                  CHAR(1) NOT NULL
 );
 
-ALTER TABLE Typy ADD CONSTRAINT Typy_pk PRIMARY KEY ( ID_Typu );
-
-CREATE TABLE Uslugi (
-    ID_Uslugi NUMBER NOT NULL,
-    Nazwa     VARCHAR2(255),
-    Cena      NUMBER(5, 2),
-    Uwagi     VARCHAR2(255)
+CREATE TABLE Producenci (
+    ID_Producenta            NUMBER(7) NOT NULL CONSTRAINT Producenci_pk PRIMARY KEY,
+    nazwa                    VARCHAR2(55) NOT NULL UNIQUE
 );
 
-ALTER TABLE Uslugi ADD CONSTRAINT Uslugi_pk PRIMARY KEY ( ID_Uslugi );
+
+CREATE TABLE Lokalizacje_produktow (
+    ID_Lokalizacji           NUMBER(7) NOT NULL CONSTRAINT Lokalizacje_produktow_pk PRIMARY KEY,
+    nazwa                    VARCHAR2(25) NOT NULL UNIQUE,
+    nr_budynku               VARCHAR2(5) NOT NULL UNIQUE,
+	uwagi                    VARCHAR2(255),
+	UNIQUE(nazwa, nr_budynku)
+);
