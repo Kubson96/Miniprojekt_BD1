@@ -103,9 +103,9 @@ CREATE TABLE Produkty (
     kod_produktu             VARCHAR2(10) NOT NULL UNIQUE,
 	nazwa                    VARCHAR2(65) NOT NULL,
 	opis                     VARCHAR2(255) NOT NULL,
-	cena_netto               NUMBER(5, 2) NOT NULL,
+	cena_netto               NUMBER(7, 2) NOT NULL,
 	ilosc                    NUMBER(5) NOT NULL,
-	stawka_vat               NUMBER(2, 2) NOT NULL,
+	stawka_vat               NUMBER(4, 2) NOT NULL,
 	rok_produkcji            CHAR(4) NOT NULL,
 	mies_gwarancji           NUMBER(3) NOT NULL,
 	procent_promocji         NUMBER(3)
@@ -158,8 +158,8 @@ CREATE TABLE Uslugi (
     ID_Uslugi        NUMBER(7) NOT NULL CONSTRAINT Uslugi_pk PRIMARY KEY,
     nazwa            VARCHAR2(55) NOT NULL UNIQUE,
     opis             VARCHAR2(255) NOT NULL,
-    cena_netto       NUMBER(5, 2) NOT NULL,
-    stawka_vat       NUMBER(2, 2) NOT NULL
+    cena_netto       NUMBER(7, 2) NOT NULL,
+    stawka_vat       NUMBER(4, 2) NOT NULL
 );
 
 CREATE TABLE Zlecenia_uslug (
