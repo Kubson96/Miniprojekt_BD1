@@ -58,7 +58,7 @@ ALTER TABLE Pracownicy ADD CONSTRAINT Pracownicy_Osoby_fk FOREIGN KEY ( ID_Osoby
     REFERENCES Osoby ( ID_Osoby )
 NOT DEFERRABLE;
 ALTER TABLE Pracownicy ADD CONSTRAINT Pracownicy_Prac_przelozeni_fk FOREIGN KEY ( ID_Przelozonego )
-    REFERENCES Pracownicy ( ID_Pracownika )
+    REFERENCES Pracownicy ( ID_Osoby )
 NOT DEFERRABLE;
 
 CREATE TABLE Stanowiska_pracownikow (
