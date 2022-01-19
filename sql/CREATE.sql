@@ -170,7 +170,7 @@ CREATE TABLE Zlecenia_uslug (
     czy_przyjeto_zlecenie            CHAR(1)  NOT NULL,
 	data_przyjecia_zlecenia          DATE  NOT NULL,
 	czy_zrealizowano_usluge          CHAR(1)  NOT NULL,
-	data_realizacji_uslgi            DATE  NOT NULL
+	data_realizacji_uslugi            DATE  NOT NULL
 );
 
 ALTER TABLE Zlecenia_uslug ADD CONSTRAINT Zlec_uslug_Klienci_fk FOREIGN KEY ( ID_Klienta )
