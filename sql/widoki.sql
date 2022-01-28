@@ -24,7 +24,7 @@ ORDER BY ZYSK_NETTO DESC;
 
 SELECT * FROM W_kadrowa;
 
-DROP VIEW W_kadrowa;
+--DROP VIEW W_kadrowa;
 
 
 --Widok księgowa:
@@ -42,7 +42,7 @@ ORDER BY ZYSK_NETTO DESC;
 
 SELECT * FROM W_ksiegowa;
 
-DROP VIEW W_ksiegowa;
+--DROP VIEW W_ksiegowa;
 
 
 --Widok Klient:
@@ -56,11 +56,11 @@ INNER JOIN kategorie_produktow KT ON P.ID_Kategorii_prod = KT.ID_Kategorii_prod;
 
 SELECT * FROM W_klient;
 
-DROP VIEW W_klient;
+--DROP VIEW W_klient;
 
 
 --Widok Zamowienia klienta:
-CREATE OR REPLACE VIEW W_zamowienia_kilenta AS
+CREATE OR REPLACE VIEW W_zamowienia_klienta AS
 
 SELECT Z.ID_Klienta, P.nazwa, P.kod_produktu, ROUND(P.cena_netto*(1+P.stawka_vat/100), 2) AS CENA_BRUTTO, 
 ZP.ilosc, TO_CHAR(Z.data_zlozenia_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_zlozenia_zamowienia, Z.czy_przyjeto_zamowienie, TO_CHAR(Z.data_realizacji_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_realizacji_zamowienia, 
@@ -68,29 +68,29 @@ Z.czy_zrealizowano_zamowienie, Z.czy_do_wysylki FROM Zamowienia_produkty ZP
 INNER JOIN Zamowienia Z ON ZP.ID_Zamowienia = Z.ID_Zamowienia
 INNER JOIN Produkty P ON ZP.ID_Produktu = P.ID_Produktu;
 
-SELECT * FROM W_zamowienia_kilenta;
+SELECT * FROM W_zamowienia_klienta;
 
-DROP VIEW W_zamowienia_kilenta;
+--DROP VIEW W_zamowienia_klienta;
 
 
 --Wybor klienta:
-CREATE OR REPLACE VIEW W_wybor_kilenta AS
+CREATE OR REPLACE VIEW W_wybor_klienta AS
 
 SELECT K.ID_Klienta, O.imie, O.nazwisko, O.nr_telefonu, O.mail, K.nip FROM Klienci K
 INNER JOIN Osoby O ON K.ID_Osoby = O.ID_Osoby;
 
-SELECT * FROM W_wybor_kilenta;
+SELECT * FROM W_wybor_klienta;
 
-DROP VIEW W_wybor_kilenta;
+--DROP VIEW W_wybor_kilenta;
 
 
 --Adres klienta:
-CREATE OR REPLACE VIEW W_adres_kilenta AS
+CREATE OR REPLACE VIEW W_adres_klienta AS
 
 SELECT K.ID_Klienta, A.* FROM Klienci K 
 INNER JOIN Osoby O ON K.ID_Osoby = O.ID_Osoby 
 INNER JOIN Adresy A ON O.ID_Adresu = A.ID_Adresu;
 
-SELECT * FROM W_adres_kilenta;
+SELECT * FROM W_adres_klienta;
 
-DROP VIEW W_adres_kilenta;
+--DROP VIEW W_adres_kilenta;
