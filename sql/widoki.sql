@@ -1,4 +1,4 @@
---Widok klient:
+--Widok klient - do usuniecia:
 CREATE OR REPLACE VIEW W_klient
 AS
 SELECT Kat.Nazwa AS Kategoria, Producent.nazwa AS Nazwa_producenta, Produkt.kod_produktu, Produkt.nazwa AS Nazwa_produktu, Produkt.opis, Produkt.cena_netto, Produkt.ilosc AS Ilosc_sztuk, Produkt.stawka_vat, Produkt.rok_produkcji, Produkt.mies_gwarancji, Produkt.procent_promocji FROM Produkty Produkt
@@ -31,7 +31,7 @@ DROP VIEW W_kadrowa;
 CREATE OR REPLACE VIEW W_ksiegowa AS
 
 SELECT SUM (PR.cena_netto) AS ZYSK_NETTO, Z.ID_Zamowienia, 
-PR.kod_produktu, PR.nazwa, PRD.nazwa AS NAZWA_PRODUCENTA, PR.cena_netto, ZP.ilosc FROM Zamowienia Z
+PR.kod_produktu, PR.nazwa, PRD.nazwa AS NAZWA_PRODUCENTA, PR.cena_netto, COUNT(*) AS ILOSC FROM Zamowienia Z
 INNER JOIN Zamowienia_produkty ZP ON Z.ID_Zamowienia = ZP.ID_Zamowienia
 INNER JOIN Produkty PR ON PR.ID_Produktu = ZP.ID_Produktu
 INNER JOIN Producenci PRD ON PR.ID_Producenta = PRD.ID_Producenta
@@ -44,3 +44,53 @@ SELECT * FROM W_ksiegowa;
 
 DROP VIEW W_ksiegowa;
 
+
+--Widok Klient:
+CREATE OR REPLACE VIEW W_klient AS
+
+SELECT P.ID_Produktu, KT.nazwa AS NAZWA_KATEGORII, P.nazwa, P.opis, ROUND(P.cena_netto*(1+P.stawka_vat/100), 2) AS CENA_BRUTTO, 
+P.ilosc, P.kod_produktu, PRD.nazwa AS NAZWA_PROD, P.mies_gwarancji 
+FROM Produkty P 
+INNER JOIN Producenci PRD ON P.ID_Producenta = PRD.ID_Producenta 
+INNER JOIN kategorie_produktow KT ON P.ID_Kategorii_prod = KT.ID_Kategorii_prod;
+
+SELECT * FROM W_klient;
+
+DROP VIEW W_klient;
+
+
+--Widok Zamowienia klienta:
+CREATE OR REPLACE VIEW W_zamowienia_kilenta AS
+
+SELECT Z.ID_Klienta, P.nazwa, P.kod_produktu, ROUND(P.cena_netto*(1+P.stawka_vat/100), 2) AS CENA_BRUTTO, 
+ZP.ilosc, TO_CHAR(Z.data_zlozenia_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_zlozenia_zamowienia, Z.czy_przyjeto_zamowienie, TO_CHAR(Z.data_realizacji_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_realizacji_zamowienia, 
+Z.czy_zrealizowano_zamowienie, Z.czy_do_wysylki FROM Zamowienia_produkty ZP
+INNER JOIN Zamowienia Z ON ZP.ID_Zamowienia = Z.ID_Zamowienia
+INNER JOIN Produkty P ON ZP.ID_Produktu = P.ID_Produktu;
+
+SELECT * FROM W_zamowienia_kilenta;
+
+DROP VIEW W_zamowienia_kilenta;
+
+
+--Wybor klienta:
+CREATE OR REPLACE VIEW W_wybor_kilenta AS
+
+SELECT K.ID_Klienta, O.imie, O.nazwisko, O.nr_telefonu, O.mail, K.nip FROM Klienci K
+INNER JOIN Osoby O ON K.ID_Osoby = O.ID_Osoby;
+
+SELECT * FROM W_wybor_kilenta;
+
+DROP VIEW W_wybor_kilenta;
+
+
+--Adres klienta:
+CREATE OR REPLACE VIEW W_adres_kilenta AS
+
+SELECT K.ID_Klienta, A.* FROM Klienci K 
+INNER JOIN Osoby O ON K.ID_Osoby = O.ID_Osoby 
+INNER JOIN Adresy A ON O.ID_Adresu = A.ID_Adresu;
+
+SELECT * FROM W_adres_kilenta;
+
+DROP VIEW W_adres_kilenta;

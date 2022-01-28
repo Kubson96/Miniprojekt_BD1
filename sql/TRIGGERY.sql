@@ -249,3 +249,4 @@ END;
 /
 
 DROP TRIGGER zamowienia_trigger;
+
