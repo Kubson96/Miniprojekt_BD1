@@ -63,8 +63,10 @@ SELECT * FROM W_klient;
 CREATE OR REPLACE VIEW W_zamowienia_klienta AS
 
 SELECT Z.ID_Klienta, P.nazwa, P.kod_produktu, ROUND(P.cena_netto*(1+P.stawka_vat/100), 2) AS CENA_BRUTTO, 
-ZP.ilosc, TO_CHAR(Z.data_zlozenia_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_zlozenia_zamowienia, Z.czy_przyjeto_zamowienie, TO_CHAR(Z.data_realizacji_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_realizacji_zamowienia, 
-Z.czy_zrealizowano_zamowienie, Z.czy_do_wysylki FROM Zamowienia_produkty ZP
+ZP.ilosc, TO_CHAR(Z.data_zlozenia_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_zlozenia_zamowienia, 
+Z.czy_przyjeto_zamowienie, Z.czy_zrealizowano_zamowienie,
+ TO_CHAR(Z.data_realizacji_zamowienia, 'YYYY/MM/DD HH24:MI:SS') AS data_realizacji_zamowienia, 
+ Z.czy_do_wysylki FROM Zamowienia_produkty ZP
 INNER JOIN Zamowienia Z ON ZP.ID_Zamowienia = Z.ID_Zamowienia
 INNER JOIN Produkty P ON ZP.ID_Produktu = P.ID_Produktu;
 
