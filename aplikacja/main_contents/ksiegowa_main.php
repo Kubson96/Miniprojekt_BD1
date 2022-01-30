@@ -6,6 +6,50 @@ $conn = openDatabase();
 
 if ($conn)
 {
+    if (isset($_GET['action_num']))
+    {
+        $actionNum = $_GET['action_num'];
+        $stidSub = '';
+        if ($actionNum == 1)
+        {
+            $stidSub = oci_parse($conn, 'BEGIN zw_cene_naj_wyb_uslug(:procent_podwyzki); END;');
+            
+            oci_bind_by_name($stidSub, ':procent_podwyzki', $_GET['proc_ch'], 4);
+        }
+        else if ($actionNum == 2)
+        {
+            $stidSub = oci_parse($conn, 'BEGIN zw_cene_naj_wyb_zamowien(:procent_podwyzki); END;');
+            
+            oci_bind_by_name($stidSub, ':procent_podwyzki', $_GET['proc_ch'], 4);
+        }
+        else if ($actionNum == 3)
+        {
+            $stidSub = oci_parse($conn, 'BEGIN nadaj_prom_na_min_wyb_prod(:procent_prom); END;');
+            
+            oci_bind_by_name($stidSub, ':procent_prom', $_GET['proc_ch'], 4);
+        }
+        else if ($actionNum == 4)
+        {
+            $stidSub = oci_parse($conn, 'BEGIN skroc_czas_przyjecia_zam; END;');
+        }
+        
+        if (oci_execute($stidSub) == false)
+        {
+            $e = oci_error($stidSub);
+            echo "<p class=\"error\">Błąd podczas wukonywania akcji;</br>";
+            echo htmlentities($e['message']);
+            echo "</p>\n";
+        }
+        else
+        {
+            echo "<p class=\"good\">Akcja została wykonana.</p>";
+        }
+
+        oci_free_statement($stidSub);
+
+        echo "<a href=\"main.php\">Wróć do widoku podstawowego</a>";
+    }
+
     $stid = oci_parse($conn, 'SELECT * FROM W_ksiegowa_produkty');
     oci_execute($stid);
 
@@ -82,6 +126,25 @@ if ($conn)
         echo "<p class=\"info\">Brak danych do wyświetlenia.</p>";
     }
     echo "</table>\n";
+
+    echo "<h3 class=\"left-align sub-title\">Wybierz akcję do wykonania</h3>\n";
+    ?>
+        <form id="new_action" action="main.php">
+            <label>Wybierz akcję: 
+                <select name="action_num" id="action_num" form="new_action">
+                    <option value="1">Zwiększ cenę najczęściej wybieranych usług</option>
+                    <option value="2">Zwiększ cenę najczęściej wybieranych zamówień</option>
+                    <option value="3">Nadaj promocję na najmniej wybierane produkty</option>
+                    <option value="4">Skróć czas przyjęcia zamówień</option>
+                </select>
+            </label></br>
+            <label>Procent zmiany: 
+                <input type="number", name="proc_ch" value="20">%
+            </label></br>
+
+            <input type="submit" value="Wykonaj">
+        </form>
+    <?php
 }
 else
 {

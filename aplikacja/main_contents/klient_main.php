@@ -13,6 +13,14 @@ if ($conn)
         $idProduktu = $_GET['ID_Produktu'];
         $stid = oci_parse($conn, 'SELECT * FROM W_klient WHERE ID_Produktu = ' . $idProduktu);
         oci_execute($stid);
+        
+        if (oci_execute($stid) == false)
+        {
+            $e = oci_error($stid);
+            echo "<p class=\"error\">Błąd podczas wybierania produktu;</br>";
+            echo htmlentities($e['message']);
+            echo "</p>\n";
+        }
 
         echo "<h3 class=\"left-align sub-title\">Zamawianie poduktu</h3>\n";
         echo "<table>\n";
@@ -90,7 +98,13 @@ if ($conn)
             oci_bind_by_name($stidSub, ':kod_odp', $kodOdp, 32);
             oci_bind_by_name($stidSub, ':wiadomosc', $wiadOdp, 512);
             
-            oci_execute($stidSub);
+            if (oci_execute($stidSub) == false)
+            {
+                $e = oci_error($stidSub);
+                echo "<p class=\"error\">Błąd podczas zamawiania;</br>";
+                echo htmlentities($e['message']);
+                echo "</p>\n";
+            }
             if ($kodOdp < 0)
             {
                 echo "<p class=\"error\">Błąd: " . $kodOdp . ': ' . $wiadOdp . "</p>";
@@ -158,6 +172,13 @@ if ($conn)
     
         $stid = oci_parse($conn, 'SELECT * FROM W_wybor_klienta');
         oci_execute($stid);
+        if (oci_execute($stid) == false)
+        {
+            $e = oci_error($stid);
+            echo "<p class=\"error\">Błąd podczas sprawdzania listy klientów;</br>";
+            echo htmlentities($e['message']);
+            echo "</p>\n";
+        }
     
         $i = 0;
         echo "<h3 class=\"left-align sub-title\">Wybierz klienta</h3>\n";
@@ -260,13 +281,10 @@ if ($conn)
         }
     }
     
-
-    
 }
 else
 {
     exit;
 }
 
-oci_free_statement($stid);
 oci_close($conn);

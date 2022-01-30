@@ -6,6 +6,48 @@ $conn = openDatabase();
 
 if ($conn)
 {
+    if (isset($_GET['name']))
+    {
+        $stidSub = oci_parse($conn, 'BEGIN Dodaj_pracownika(:imie_v, :nazwisko_v, 
+        :data_ur_v, :PESEL_v, :nr_telefonu_v, :email_v, :plec_v, :misto_v, :ulica_v, :nr_budynku_v, :nr_mieszkania_v, 
+        :pensja_v, :st_zdrowia_v, :data_bad_okresowego_v, :szczepiony_v, :ID_Stanowiska_v, :ID_Przelozonego_v, :uwagi_v); END;');
+            
+        oci_bind_by_name($stidSub, ':imie_v', $_GET['name'], 55);
+        oci_bind_by_name($stidSub, ':nazwisko_v', $_GET['surname'], 70);
+        oci_bind_by_name($stidSub, ':data_ur_v', $_GET['born']);
+        oci_bind_by_name($stidSub, ':PESEL_v', $_GET['PESEL'], 11);
+        oci_bind_by_name($stidSub, ':nr_telefonu_v', $_GET['tel'], 13);
+        oci_bind_by_name($stidSub, ':email_v', $_GET['mail'], 216);
+        oci_bind_by_name($stidSub, ':plec_v', $_GET['sex'], 2);
+        oci_bind_by_name($stidSub, ':misto_v', $_GET['city'], 70);
+        oci_bind_by_name($stidSub, ':ulica_v', $_GET['street'], 70);
+        oci_bind_by_name($stidSub, ':nr_budynku_v', $_GET['home_num'], 30);
+        oci_bind_by_name($stidSub, ':nr_mieszkania_v', $_GET['apartment_num'], 30);
+        oci_bind_by_name($stidSub, ':pensja_v', $_GET['salary']);
+        oci_bind_by_name($stidSub, ':st_zdrowia_v', $_GET['health'], 75);
+        oci_bind_by_name($stidSub, ':data_bad_okresowego_v', $_GET['test_date']);
+        oci_bind_by_name($stidSub, ':szczepiony_v', $_GET['vaccinated'], 2);
+        oci_bind_by_name($stidSub, ':ID_Stanowiska_v', $_GET['ID_Stanowiska']);
+        oci_bind_by_name($stidSub, ':ID_Przelozonego_v', $_GET['ID_Przelozonego']);
+        oci_bind_by_name($stidSub, ':uwagi_v', $_GET['comments'], 512);
+        
+        if (oci_execute($stidSub) == false)
+        {
+            $e = oci_error($stidSub);
+            echo "<p class=\"error\">Błąd podczas dodawania pracownika;</br>";
+            echo htmlentities($e['message']);
+            echo "</p>\n";
+        }
+        else
+        {
+            echo "<p class=\"good\">Pracownik został dodany.</p>";
+        }
+
+        oci_free_statement($stidSub);
+
+        echo "<a href=\"main.php\">Wróć do widoku podstawowego</a>";
+    }
+
     $stid = oci_parse($conn, 'SELECT * FROM W_kadrowa');
     oci_execute($stid);
 
@@ -220,9 +262,60 @@ if ($conn)
         <label for="T">tak</label><br>
         <input type="radio" id="N" name="vaccinated" value="0">
         <label for="N">nie</label><br>
+        <label>Wybierz stanowisko: 
+        <?php
+            $stid = oci_parse($conn, 'SELECT ID_Stanowiska, nazwa FROM Stanowiska');
+            oci_execute($stid);
+
+            echo "<select name=\"ID_Stanowiska\" id=\"position\"  form=\"new_worker_form\">\n";
+            while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
+                echo "<option value=\"" . $row['ID_STANOWISKA'] . "\">";
+
+                foreach ($row as $item => $value) {
+
+                    if ($item == 'ID_STANOWISKA')
+                    { }
+                    else
+                    {
+                        echo ($value !== null ? htmlentities($value, ENT_QUOTES) : "&nbsp;") . " ";
+                    }
+                }
+            }
+            echo "</select></br>\n";
+        ?>
+        </label>
+        <label>Wybierz przełożonego: 
+        <?php
+            $stid = oci_parse($conn, 'SELECT ID_Osoby, imie, nazwisko, PESEL FROM Osoby');
+            oci_execute($stid);
+
+            echo "<select name=\"ID_Przelozonego\" id=\"boss\"  form=\"new_worker_form\">\n";
+            while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
+                echo "<option value=\"" . $row['ID_OSOBY'] . "\">";
+
+                foreach ($row as $item => $value) {
+
+                    if ($item == 'ID_OSOBY')
+                    { }
+                    else if ($item == 'PESEL')
+                    {
+                        echo ($value !== null ? htmlentities(', PESEL: ' . $value, ENT_QUOTES) : "&nbsp;") . " ";
+                    }
+                    else
+                    {
+                        echo ($value !== null ? htmlentities($value, ENT_QUOTES) : "&nbsp;") . " ";
+                    }
+                }
+            }
+            echo "</option>\n";
+            echo "<option value=\"-1\">brak";
+            echo "</option>\n";
+            echo "</select></br>\n";
+        ?>
+        </label>
+
         <label>Uagi: <input type="text" name="comments"></label></br>
         <input type="submit" value="Zatwierdź">
-
     </form>
     <?php
 }
