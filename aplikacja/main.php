@@ -42,7 +42,19 @@ if(isset($_COOKIE['BDM1_log']))
 			else if ($user_type == 'kadrowa')
 			{
 				require_once 'main_contents/kadrowa_main.php';
-			} 
+			}
+            else if($user_type == 'magazynier')
+            {
+                require_once  'main_contents/magazynier_main.php';
+            }
+			else if($user_type == 'kierownik')
+            {
+                require_once  'main_contents/kierownik_main.php';
+            }
+            else if($user_type == 'dostawca')
+            {
+                require_once  'main_contents/dostawca_main.php';
+            }
 		?>
 	</main>
 
