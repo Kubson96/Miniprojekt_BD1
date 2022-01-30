@@ -69,7 +69,7 @@ INSERT INTO Adresy VALUES(Adresy_ID_Sek.nextval, miasto_v, ulica_v, nr_budynku_v
 INSERT INTO Osoby VALUES(Osoby_ID_Sek.nextval, Adresy_ID_Sek.currval, imie_v, nazwisko_v, 
 TO_DATE(data_ur_v, 'YYYY-MM-DD'), PESEL_v, nr_telefonu_v, email_v, plec_v);
 
-IF (ID_Przelozonego > 0) THEN
+IF (ID_Przelozonego_v > 0) THEN
 
 INSERT INTO Pracownicy VALUES(Pracownicy_ID_Sek.nextval, Osoby_ID_Sek.currval, ID_Przelozonego_v, sysdate, pensja_v,
 st_zdrowia_v, TO_DATE(data_bad_okresowego_v, 'YYYY-MM-DD'), szczepiony_v, uwagi_v);
