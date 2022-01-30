@@ -1,6 +1,6 @@
 -- 1
 
-CREATE OR REPLACE PROCEDURE zw_cene_naj_wyb_uslug(procent_podwyzki NUMBER DEFAULT 0.05)
+CREATE OR REPLACE PROCEDURE zw_cene_naj_wyb_uslug(procent_podwyzki IN NUMBER DEFAULT 5)
 IS
 max_zamowien_uslug NUMBER := 0;
 CURSOR ilosc_pos_uslug_cur IS
@@ -11,7 +11,7 @@ CURSOR ilosc_pos_uslug_cur IS
 
 BEGIN
 
-if (procent_podwyzki > 1 OR procent_podwyzki < 0.01) THEN
+if (procent_podwyzki > 100 OR procent_podwyzki < 1) THEN
 
 	RAISE_APPLICATION_ERROR(-20000, 'Wyjatek: procent do zmiany ceny musi byc z przedzialu od 1% do 100%.');
 
@@ -24,7 +24,7 @@ SELECT MAX(ILOSC_ZAMOWIEN_USLUG) INTO max_zamowien_uslug FROM (
 
 FOR us IN ilosc_pos_uslug_cur LOOP
 
-	UPDATE Uslugi SET cena_netto = cena_netto * (1 + procent_podwyzki) WHERE ID_Uslugi = us.ID_Uslugi
+	UPDATE Uslugi SET cena_netto = cena_netto * (1 + procent_podwyzki/100) WHERE ID_Uslugi = us.ID_Uslugi
 	AND us.ILOSC_ZAMOWIEN_USLUG = max_zamowien_uslug;
 
 END LOOP;
@@ -38,7 +38,7 @@ DROP PROCEDURE zw_cene_naj_wyb_uslug;
 
 -- 2
 
-CREATE OR REPLACE PROCEDURE zw_cene_naj_wyb_zamowien(procent_podwyzki NUMBER DEFAULT 0.05)
+CREATE OR REPLACE PROCEDURE zw_cene_naj_wyb_zamowien(procent_podwyzki IN NUMBER DEFAULT 5)
 IS
 max_zamowien NUMBER := 0;
 CURSOR ilosc_pos_zamowien_cur IS
@@ -50,7 +50,7 @@ CURSOR ilosc_pos_zamowien_cur IS
 
 BEGIN
 
-if (procent_podwyzki > 1 OR procent_podwyzki < 0.01) THEN
+if (procent_podwyzki > 100 OR procent_podwyzki < 1) THEN
 
 	RAISE_APPLICATION_ERROR(-20000, 'Wyjatek: procent do zmiany ceny musi byc z przedzialu od 1% do 100%.');
 
@@ -64,7 +64,7 @@ SELECT MAX(ILOSC_ZAMOWIEN) INTO max_zamowien FROM (
 
 FOR pr IN ilosc_pos_zamowien_cur LOOP
 
-	UPDATE Produkty SET cena_netto = cena_netto * (1 + procent_podwyzki) WHERE ID_Produktu = pr.ID_Produktu 
+	UPDATE Produkty SET cena_netto = cena_netto * (1 + procent_podwyzki/100) WHERE ID_Produktu = pr.ID_Produktu 
 	AND pr.ILOSC_ZAMOWIEN = max_zamowien;
 
 END LOOP;
@@ -78,7 +78,7 @@ DROP PROCEDURE zw_cene_naj_wyb_zamowien;
 
 -- 3
 
-CREATE OR REPLACE PROCEDURE nadaj_prom_na_min_wyb_prod(procent_prom NUMBER DEFAULT 5)
+CREATE OR REPLACE PROCEDURE nadaj_prom_na_min_wyb_prod(procent_prom IN NUMBER DEFAULT 5)
 IS
 min_zamowien NUMBER := 1000000;
 CURSOR ilosc_pos_zamowien_cur IS
