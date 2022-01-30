@@ -11,7 +11,7 @@
 
 <b>Dane osobowe:</b>
 <?php
-$conn = oci_connect("kuba", "password", "//localhost/orclpdb", "AL32UTF8");
+$conn = oci_connect("pawel", "password", "//localhost/orclpdb", "AL32UTF8");
 if (!$conn) {
   $m = oci_error();
   echo $m['message'], "\n";

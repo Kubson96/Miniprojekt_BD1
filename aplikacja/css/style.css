@@ -14,6 +14,18 @@ body{
 }
 header{
     background: #ffaa00;
+    text-align: center;
+    color: #000;
+}
+header #logo{
+    float:left;
+}
+header .logged_as{
+    color: #000;
+    line-height:100px;
+    font-size: 30px;
+}
+header .logged_as i{
     color: #000;
 }
 nav{
@@ -23,7 +35,7 @@ nav{
     color: #FFF;
 }
 nav a i{
-    color:white;
+    color: #FFF;
     font-size: 40px;
     padding:10px;
 }
@@ -39,7 +51,6 @@ footer{
     margin-top: 1.5rem;
 }
 main{
-    
     flex: 1 0 auto;
     width:80%;
     margin: 0 auto;
@@ -72,16 +83,29 @@ section{
 h2 {
     margin: .5rem 0;
 }
+.left-align {
+    text-align: left;
+}
+.sub-title {
+    margin: 1rem 0;
+}
+.sub-title::after {
+    content: "";
+    display: block;
+    height: 3px;
+    background-color: #ffaa00;
+}
 #logo{
     height:100px;
     width: auto;
     margin: 10px;
 }
 input,select,textarea{
+    background: #333;
     margin-top:5px;
     padding: 5px;
     border-radius: 15px;
-    border:2px solid #83ffee;
+    border:2px solid #ffaa00;
 }
 textarea{resize: none;}
 form button{
@@ -90,12 +114,12 @@ form button{
     margin:10px;
     font-size: 16px;
     border-radius: 15px;
-    background: #2fefe2;
-    border: 5px solid #00A693;
+    background: #ffaa00;
+    border: 5px solid #ffaa00;
 }
 form button:hover {
-    background: #32b9ac;
-    border: 5px solid #2fefe2;
+    background: #ffaa00;
+    border: 5px solid #ffaa00;
 }
 table {
     border-collapse: collapse;
@@ -105,10 +129,10 @@ td {
     border: 1px solid black;
     text-align: center;
     padding: 7px;
-    background: rgba(47,239,226,0.2);
+    background: rgba(255,170,0,0.2);
 }
 tr:first-of-type{
-    background: rgba(47,239,226,0.7);
+    background: rgba(255,170,0,0.7);
 }
 /* TOOLTIP */
 .tooltip {
@@ -150,8 +174,8 @@ tr:first-of-type{
     text-decoration: none;
 }
 .back p{
-    border:2px solid #2fefe2;
-    background: rgba(48, 255, 242, 0.5);
+    border:2px solid #ffaa00;
+    background: rgba(255, 170, 0, 0.5);
 }
 .back p,.back i{
     color:red;
@@ -174,18 +198,3 @@ tr:first-of-type{
     padding: 1rem;
     border-radius: 15px;
 }
-
-#schemat{
-    transform: scale(0.6) rotate(-15deg);
-    transition: transform .25s, visibility .25s ease-in;
-
-}#schemat:hover{
-    transform: scale(1) rotate(0);
- }
-#code{
-    transform: scale(0.6) rotate(15deg);
-    transition: transform .25s, visibility .25s ease-in;
-
-}#code:hover{
-    transform: scale(1) rotate(0);
- }
