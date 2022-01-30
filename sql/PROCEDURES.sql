@@ -32,6 +32,8 @@ BEGIN
 	INSERT INTO Zamowienia_produkty VALUES(Zamowienia_produkty_ID_Sek.nextval, ID_Produktu_v, 
 	Zamowienia_ID_Sek.currval, ilosc_v);
 	
+	UPDATE Produkty SET ilosc = ilosc - ilosc_v WHERE ID_Produktu = ID_Produktu_v;
+	
 	EXCEPTION
 	WHEN niedostepna_ilosc THEN
 		kod_odp := -1;
@@ -47,3 +49,42 @@ END;
 /
 
 DROP PROCEDURE Zamow_produkt;
+
+-- 
+
+CREATE OR REPLACE PROCEDURE Dodaj_pracownika (imie_v IN VARCHAR2, nazwisko_v IN VARCHAR2, 
+											  data_ur_v IN VARCHAR2, PESEL_v IN NUMBER,
+											  nr_telefonu_v IN VARCHAR2, email_v IN VARCHAR2,
+											  plec_v IN VARCHAR2, miasto_v IN VARCHAR2, ulica_v IN VARCHAR2,
+											  nr_budynku_v IN VARCHAR2, nr_mieszkania_v IN VARCHAR2,
+											  pensja_v IN NUMBER, st_zdrowia_v IN VARCHAR2,
+											  data_bad_okresowego_v IN VARCHAR2, szczepiony_v IN VARCHAR2,
+											  ID_Stanowiska_v IN NUMBER, ID_Przelozonego_v IN NUMBER,
+											  uwagi_v IN VARCHAR2)
+IS
+BEGIN
+
+INSERT INTO Adresy VALUES(Adresy_ID_Sek.nextval, miasto_v, ulica_v, nr_budynku_v, nr_mieszkania_v);
+
+INSERT INTO Osoby VALUES(Osoby_ID_Sek.nextval, Adresy_ID_Sek.currval, imie_v, nazwisko_v, 
+TO_DATE(data_ur_v, 'YYYY-MM-DD'), PESEL_v, nr_telefonu_v, email_v, plec_v);
+
+IF (ID_Przelozonego > 0) THEN
+
+INSERT INTO Pracownicy VALUES(Pracownicy_ID_Sek.nextval, Osoby_ID_Sek.currval, ID_Przelozonego_v, sysdate, pensja_v,
+st_zdrowia_v, TO_DATE(data_bad_okresowego_v, 'YYYY-MM-DD'), szczepiony_v, uwagi_v);
+
+ELSE
+
+INSERT INTO Pracownicy VALUES(Pracownicy_ID_Sek.nextval, Osoby_ID_Sek.currval, Osoby_ID_Sek.currval, sysdate, pensja_v,
+st_zdrowia_v, TO_DATE(data_bad_okresowego_v, 'YYYY-MM-DD'), szczepiony_v, uwagi_v);
+
+END IF;
+
+INSERT INTO Stanowiska_pracownikow VALUES(Stanowiska_pracownikow_ID_Sek.nextval, ID_Stanowiska_v, 
+Pracownicy_ID_Sek.currval);
+
+END;
+/
+
+DROP PROCEDURE Dodaj_pracownika;
