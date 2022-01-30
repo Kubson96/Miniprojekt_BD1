@@ -26,12 +26,12 @@ if(isset($_COOKIE['BDM1_log']))
 	<main>
 		<h2>Wybierz widok bazy</h2>
 		<ul>
-			<li> <a href="login.php?user=klient"> Klient </a> </li>
-			<li> <a href="login.php?user=ksiegowa"> Księgowa </a> </li>
-			<li> <a href="login.php?user=kadrowa"> Kadrowa </a> </li>
-			<li> <a href="login.php?user=dostawca"> Dostawca </a> </li>
-			<li> <a href="login.php?user=kierownik"> Kierownik </a> </li>
-			<li> <a href="login.php?user=magazynier"> Magazynier </a> </li>
+			<li><a href="login.php?user=klient"><i class="fas fa-user"></i><br>Klient</a> </li>
+			<li><a href="login.php?user=ksiegowa"><i class="fas fa-file-invoice-dollar"></i><br>Księgowa</a></li>
+			<li><a href="login.php?user=kadrowa"><i class="fas fa-people-arrows"></i><br>Kadrowa</a></li>
+			<li><a href="login.php?user=dostawca"> <i class="fas fa-truck"></i><br>Dostawca</a> </li>
+			<li><a href="login.php?user=kierownik"><i class="fas fa-dragon"></i><br>Kierownik</a> </li>
+			<li><a href="login.php?user=magazynier"><i class="fas fa-pallet"></i><br>Magazynier</a> </li>
 		</ul>
 	</main>
 

@@ -18,9 +18,9 @@
 		$header_template .= "\n\r<nav>";
 		$header_template .= "\n\r<a href=\"login.php?logout=1\"><i class=\"tooltip fas fa-power-off\"><span class=\"tooltiptext\">Wyloguj</span></i></a>";
 		$header_template .= "\n\r</nav>";
-		$header_template .= "\n\r<div>\n\r<p> Zalogowano jako: ";
+		$header_template .= "\n\r<span class='logged_as'> Zalogowano jako: ";
 		$header_template .= USER_TYPE_NAMES[substr($_COOKIE['BDM1_log'], 10)];
-		$header_template .= "\n\r</p>\n\r</div>";
+		$header_template .= "\n\r</span>";
 		$header_template .= "\n\r</header>";
 
 		echo ($header_template);
