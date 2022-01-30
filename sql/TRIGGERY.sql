@@ -250,3 +250,22 @@ END;
 
 DROP TRIGGER zamowienia_trigger;
 
+-- 3
+
+CREATE OR REPLACE TRIGGER prezes_trigger
+BEFORE INSERT OR UPDATE ON Stanowiska_pracownikow
+FOR EACH ROW
+DECLARE
+ilosc NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO ilosc FROM Stanowiska_pracownikow SP 
+	INNER JOIN Stanowiska S ON SP.ID_stanowiska = S.ID_stanowiska 
+	WHERE SP.ID_stanowiska =: NEW.ID_stanowiska AND S.nazwa LIKE 'prezes';
+    
+	IF (ilosc >= 1) THEN
+		RAISE_APPLICATION_ERROR(-20000, 'Wyjatek: w tej firmie moze istniec tylko jeden prezes.');
+	END IF;
+END;
+/
+
+DROP TRIGGER prezes_trigger;
